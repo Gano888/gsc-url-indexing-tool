@@ -4,6 +4,7 @@ import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pandas as pd
+import streamlit.components.v1 as components  # NEW
 
 # --- Must be first Streamlit call ---
 st.set_page_config(page_title="GSC URL Indexing Tool", layout="wide")
@@ -101,31 +102,17 @@ auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=Tr
 st.sidebar.markdown("---")
 st.sidebar.subheader("🔁 Session Control")
 
-if "reset" not in st.session_state:
-    st.session_state.reset = False
-if "reset_done" not in st.session_state:
-    st.session_state.reset_done = False
-
 confirm_reset = st.sidebar.checkbox("Confirm reset app state")
 if st.sidebar.button("🔁 Start New Check"):
     if confirm_reset:
-        st.session_state.reset = True
-        st.rerun()
+        # Force a full page reload
+        components.html("""
+            <script>
+                window.location.reload();
+            </script>
+        """)
     else:
         st.sidebar.warning("Please confirm before resetting.")
-
-if st.session_state.reset:
-    for key in list(st.session_state.keys()):
-        if key not in ["reset", "reset_done"]:
-            del st.session_state[key]
-    st.session_state.reset = False
-    st.session_state.reset_done = True
-    st.rerun()
-
-# --- Show Reset Complete Toast
-if st.session_state.reset_done:
-    st.success("✅ Reset complete! Ready for a new check.")
-    st.session_state.reset_done = False
 
 # --- Main App Tabs ---
 tab1, tab2 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing"])
