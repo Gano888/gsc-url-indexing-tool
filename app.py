@@ -30,10 +30,22 @@ st.markdown(
     .stButton>button:hover {
         background-color: #0056b3;
     }
+    .banner {
+        padding: 1rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 10px;
+        font-size: 1.3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+# --- Banner ---
+st.markdown('<div class="banner">📢 Welcome to the GSC URL Indexing Tool – Easily inspect & resubmit your URLs to Google</div>', unsafe_allow_html=True)
 
 # --- Cached Helpers ---
 @st.cache_data(show_spinner=False)
@@ -126,43 +138,13 @@ auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=Tr
 
 # --- Sidebar: Simple Note
 st.sidebar.markdown("---")
-st.sidebar.info("🔁 To start a new session, refresh the page (F5 or browser refresh).")
+st.sidebar.info("🔁 To start a new session, upload a new file or refresh the page (F5).")
 
 # --- Main App Tabs ---
-tab1, tab2, tab3 = st.tabs(["📄 How to Use", "🔍 Index Checker", "🚀 Submit for Indexing"])
+tab1, tab2, tab3 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing", "📄 How to Use"])
 
-# --- TAB 1: How to Use ---
+# --- TAB 1: Index Checker ---
 with tab1:
-    st.title("📄 How to Use the GSC URL Indexing Tool")
-    st.markdown("""
-    ### 1. Upload Service Account JSON
-    - From Google Cloud IAM → Service Account → Create Key → JSON format.
-
-    ### 2. Select Your Property
-    - Choose the website property (e.g., `https://example.com` or `sc-domain:example.com`).
-
-    ### 3. Upload URL List
-    - Upload a `.txt` file with one URL per line.
-
-    ### 4. (Optional) Enable Auto-Refresh
-    - Automatically inspect URLs after uploading the list.
-
-    ### 5. Check URL Statuses
-    - Go to the **Index Checker** tab to inspect which URLs are indexed.
-
-    ### 6. Select URLs to Submit
-    - In the **Submit for Indexing** tab, choose URLs that should be re-indexed.
-
-    ### 7. Submit for Indexing
-    - Submit selected URLs to Google Indexing API.
-
-    ### 8. Start a New Session
-    - You can upload another document to start a new session
-    - To completely reset the app: **refresh the page (F5)**.
-    """)
-
-# --- TAB 2: Index Checker ---
-with tab2:
     st.title("🔍 GSC URL Index Checker")
 
     if not creds_file:
@@ -216,8 +198,8 @@ with tab2:
         st.session_state.inspected = False
         st.experimental_rerun()
 
-# --- TAB 3: Submission ---
-with tab3:
+# --- TAB 2: Submission ---
+with tab2:
     st.title("🚀 Submit for Indexing")
 
     if "df" not in st.session_state:
@@ -279,3 +261,33 @@ with tab3:
 
         for url, msg in errors:
             st.error(f"❌ {url}: {msg}")
+
+# --- TAB 3: How to Use ---
+with tab3:
+    st.title("📄 How to Use the GSC URL Indexing Tool")
+    st.markdown("""
+    ### 1. Upload Service Account JSON
+    - From Google Cloud IAM → Service Account → Create Key → JSON format.
+
+    ### 2. Select Your Property
+    - Choose the website property (e.g., `https://example.com` or `sc-domain:example.com`).
+
+    ### 3. Upload URL List
+    - Upload a `.txt` file with one URL per line.
+
+    ### 4. (Optional) Enable Auto-Refresh
+    - Automatically inspect URLs after uploading the list.
+
+    ### 5. Check URL Statuses
+    - Go to the **Index Checker** tab to inspect which URLs are indexed.
+
+    ### 6. Select URLs to Submit
+    - In the **Submit for Indexing** tab, choose URLs that should be re-indexed.
+
+    ### 7. Submit for Indexing
+    - Submit selected URLs to Google Indexing API.
+
+    ### 8. Start a New Session
+    - You can upload another document to start a new session  
+    - To completely reset the app: **refresh the page (F5)**.
+    """)
