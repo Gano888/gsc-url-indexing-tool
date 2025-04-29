@@ -14,8 +14,7 @@ st.set_page_config(
 )
 
 # --- THEME Customizer ---
-st.markdown(
-    """
+st.markdown("""
     <style>
     .css-18e3th9 { background-color: #f4f4f4; }
     .css-1d391kg { background-color: #f4f4f4; }
@@ -40,12 +39,13 @@ st.markdown(
         margin-bottom: 2rem;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # --- Banner ---
-st.markdown('<div class="banner">📢 Welcome to the GSC URL Indexing Tool – Easily inspect & resubmit your URLs to Google</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="banner">📢 Welcome to the GSC URL Indexing Tool – Easily inspect & resubmit your URLs to Google</div>',
+    unsafe_allow_html=True
+)
 
 # --- Cached Helpers ---
 @st.cache_data(show_spinner=False)
@@ -77,7 +77,7 @@ st.sidebar.title("🔧 Settings")
 creds_file = st.sidebar.file_uploader(
     "Service Account JSON",
     type="json",
-    help="Download from GCP IAM & Admin → Service Accounts → Keys → Create Key → JSON"
+    help="Download from GCP IAM → Service Accounts → Keys → Create Key → JSON"
 )
 
 property_options = []
@@ -117,7 +117,6 @@ if creds_file:
         if manual:
             st.session_state.property_url = manual
         property_url = st.session_state.property_url
-
 else:
     st.sidebar.info("Upload Service Account JSON first.")
     manual = st.sidebar.text_input(
@@ -136,13 +135,11 @@ uploaded_txt = st.sidebar.file_uploader(
 
 auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=True)
 
-# --- Sidebar: Simple Note
 st.sidebar.markdown("---")
 st.sidebar.info("🔁 To start a new session, upload a new file or refresh the page (F5).")
 
-# --- Main App Tabs ---
+# --- Tabs ---
 tab1, tab2, tab3 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing", "📄 How to Use"])
-
 # --- TAB 1: Index Checker ---
 with tab1:
     st.title("🔍 GSC URL Index Checker")
@@ -197,7 +194,6 @@ with tab1:
     if st.button("🔄 Re-check Statuses"):
         st.session_state.inspected = False
         st.experimental_rerun()
-
 # --- TAB 2: Submission ---
 with tab2:
     st.title("🚀 Submit for Indexing")
@@ -264,8 +260,6 @@ with tab2:
 
 # --- TAB 3: How to Use ---
 with tab3:
-    st.write("✅ You are in the documentation tab")
-
     st.title("📄 How to Use the GSC URL Indexing Tool")
     st.markdown("""
     ### 1. Upload Service Account JSON
