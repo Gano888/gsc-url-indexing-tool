@@ -264,6 +264,8 @@ with tab2:
 
 # --- TAB 3: How to Use ---
 with tab3:
+    st.write("✅ You are in the documentation tab")
+
     st.title("📄 How to Use the GSC URL Indexing Tool")
     st.markdown("""
     ### 1. Upload Service Account JSON
