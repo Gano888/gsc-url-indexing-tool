@@ -101,14 +101,31 @@ auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=Tr
 st.sidebar.markdown("---")
 st.sidebar.subheader("🔁 Session Control")
 
+if "reset" not in st.session_state:
+    st.session_state.reset = False
+if "reset_done" not in st.session_state:
+    st.session_state.reset_done = False
+
 confirm_reset = st.sidebar.checkbox("Confirm reset app state")
 if st.sidebar.button("🔁 Start New Check"):
     if confirm_reset:
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.experimental_rerun()
+        st.session_state.reset = True
+        st.rerun()
     else:
         st.sidebar.warning("Please confirm before resetting.")
+
+if st.session_state.reset:
+    for key in list(st.session_state.keys()):
+        if key not in ["reset", "reset_done"]:
+            del st.session_state[key]
+    st.session_state.reset = False
+    st.session_state.reset_done = True
+    st.rerun()
+
+# --- Show Reset Complete Toast
+if st.session_state.reset_done:
+    st.success("✅ Reset complete! Ready for a new check.")
+    st.session_state.reset_done = False
 
 # --- Main App Tabs ---
 tab1, tab2 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing"])
