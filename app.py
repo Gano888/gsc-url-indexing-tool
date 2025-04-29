@@ -4,7 +4,7 @@ import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pandas as pd
-import streamlit.components.v1 as components  # NEW
+import streamlit.components.v1 as components  # Needed for JS reload
 
 # --- Must be first Streamlit call ---
 st.set_page_config(page_title="GSC URL Indexing Tool", layout="wide")
@@ -102,17 +102,25 @@ auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=Tr
 st.sidebar.markdown("---")
 st.sidebar.subheader("🔁 Session Control")
 
+if "reset_trigger" not in st.session_state:
+    st.session_state.reset_trigger = False
+
 confirm_reset = st.sidebar.checkbox("Confirm reset app state")
-if st.sidebar.button("🔁 Start New Check"):
-    if confirm_reset:
-        # Force a full page reload
-        components.html("""
-            <script>
-                window.location.reload();
-            </script>
-        """)
-    else:
-        st.sidebar.warning("Please confirm before resetting.")
+
+if not st.session_state.reset_trigger:
+    if st.sidebar.button("🔁 Start New Check"):
+        if confirm_reset:
+            st.session_state.reset_trigger = True
+            st.experimental_rerun()
+        else:
+            st.sidebar.warning("Please confirm before resetting.")
+else:
+    st.sidebar.success("🔄 Resetting... Please wait")
+    components.html("""
+        <script>
+            window.location.reload();
+        </script>
+    """)
 
 # --- Main App Tabs ---
 tab1, tab2 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing"])
