@@ -4,10 +4,36 @@ import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pandas as pd
-import streamlit.components.v1 as components  # Needed for JS reload
 
 # --- Must be first Streamlit call ---
-st.set_page_config(page_title="GSC URL Indexing Tool", layout="wide")
+st.set_page_config(
+    page_title="GSC URL Indexing Tool",
+    page_icon="🕵️‍♂️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- THEME customizer ---
+st.markdown(
+    """
+    <style>
+    .css-18e3th9 { background-color: #f4f4f4; }
+    .css-1d391kg { background-color: #f4f4f4; }
+    .stButton>button {
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        height: 3em;
+        width: 100%;
+        border-radius:10px;
+    }
+    .stButton>button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # --- Cached Helpers ---
 @st.cache_data(show_spinner=False)
@@ -98,29 +124,9 @@ uploaded_txt = st.sidebar.file_uploader(
 
 auto_refresh = st.sidebar.checkbox("Auto-refresh inspection on upload", value=True)
 
-# --- Sidebar: Start New Check ---
+# --- Simple Sidebar Note ---
 st.sidebar.markdown("---")
-st.sidebar.subheader("🔁 Session Control")
-
-if "reset_trigger" not in st.session_state:
-    st.session_state.reset_trigger = False
-
-confirm_reset = st.sidebar.checkbox("Confirm reset app state")
-
-if not st.session_state.reset_trigger:
-    if st.sidebar.button("🔁 Start New Check"):
-        if confirm_reset:
-            st.session_state.reset_trigger = True
-            st.experimental_rerun()
-        else:
-            st.sidebar.warning("Please confirm before resetting.")
-else:
-    st.sidebar.success("🔄 Resetting... Please wait")
-    components.html("""
-        <script>
-            window.location.reload();
-        </script>
-    """)
+st.sidebar.info("🔁 To start a new session, refresh the page (F5 or browser refresh).")
 
 # --- Main App Tabs ---
 tab1, tab2 = st.tabs(["🔍 Index Checker", "🚀 Submit for Indexing"])
